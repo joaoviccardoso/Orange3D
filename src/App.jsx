@@ -3,7 +3,15 @@ import OrangeText from './OrangeText'
 
 export default function App() {
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <div style={{
+      position: 'relative',
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       {/* Three.js ocupa o fundo inteiro */}
       <AnimatedScene />
 

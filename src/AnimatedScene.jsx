@@ -14,7 +14,7 @@ export default function AnimatedScene() {
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0xf0ede8)
 
-    const camera = new THREE.PerspectiveCamera(80, w / h, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(100, w / h, 0.1, 1000)
     camera.position.z = 3
 
     while (mountRef.current.firstChild) {
@@ -186,7 +186,7 @@ export default function AnimatedScene() {
   return (
     <div
       ref={mountRef}
-      style={{ width: '100vw', height: '100vh', marginTop: '10rem' }}
+      style={{ width: '50vw', height: '100vh', marginTop: '15rem', cursor: 'pointer' }}
     />
   )
 }
