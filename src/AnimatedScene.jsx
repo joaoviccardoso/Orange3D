@@ -3,16 +3,18 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default function AnimatedScene() {
   const mountRef = useRef(null)
+  const animIdRef = useRef(null)
 
   useEffect(() => {
     const w = mountRef.current.clientWidth
     const h = mountRef.current.clientHeight
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0xf0ede8)
+    scene.background = null
 
     const camera = new THREE.PerspectiveCamera(100, w / h, 0.1, 1000)
     camera.position.z = 3
@@ -21,7 +23,7 @@ export default function AnimatedScene() {
       mountRef.current.removeChild(mountRef.current.firstChild)
     }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(w, h)
     renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.NoToneMapping
@@ -39,11 +41,21 @@ export default function AnimatedScene() {
     fillLight.position.set(-3, 2, -3)
     scene.add(fillLight)
 
+    const handleResize = () => {
+      const w = mountRef.current.clientWidth
+      const h = mountRef.current.clientHeight
+      camera.aspect = w / h
+      camera.updateProjectionMatrix()
+      renderer.setSize(w, h)
+    }
+    window.addEventListener('resize', handleResize)
+
     const loader = new GLTFLoader()
     loader.load('/laranja.glb', (gltf) => {
       const model = gltf.scene
+      const shaderRefs = []
 
-      // ── 1. Adiciona e centraliza o modelo ─────────────────────────────────
+      // ── 1. Adiciona e centraliza o modelo ────────────────────────────────
       scene.add(model)
 
       const box = new THREE.Box3().setFromObject(model)
@@ -56,23 +68,18 @@ export default function AnimatedScene() {
       // ── 2. Calcula maxY e minY em espaço de mundo ─────────────────────────
       let maxY = -Infinity
       let minY = Infinity
-
       const tempVec = new THREE.Vector3()
 
       model.traverse((child) => {
         if (!child.isMesh) return
-
         const geo = child.geometry
         geo.computeBoundingBox()
-
         const box = geo.boundingBox
-
         for (let x of [box.min.x, box.max.x]) {
           for (let y of [box.min.y, box.max.y]) {
             for (let z of [box.min.z, box.max.z]) {
               tempVec.set(x, y, z)
               tempVec.applyMatrix4(child.matrixWorld)
-
               maxY = Math.max(maxY, tempVec.y)
               minY = Math.min(minY, tempVec.y)
             }
@@ -95,12 +102,11 @@ export default function AnimatedScene() {
           shader.uniforms.uMaxY          = { value: maxY }
           shader.uniforms.uMinY          = { value: minY }
           shader.uniforms.uColorStem     = { value: new THREE.Color(0x1f3d12) }
-          // Limiar de altura — pode baixar sem vazar para as laterais
           shader.uniforms.uStemThreshold = { value: 0.83 }
-          // Raio máximo XZ do caule — ajuste conforme o modelo
           shader.uniforms.uStemRadius    = { value: maxDim * 0.12 }
 
-          // Vertex: combina fator de altura com fator de raio XZ
+          shaderRefs.push(shader)
+
           shader.vertexShader = `
             uniform float uMaxY;
             uniform float uMinY;
@@ -112,22 +118,16 @@ export default function AnimatedScene() {
             '#include <begin_vertex>',
             `
             #include <begin_vertex>
-
             vec4 worldPos = modelMatrix * vec4(position, 1.0);
             float worldY  = worldPos.y;
-            float distXZ  = length(worldPos.xz); // distância do eixo central
-
+            float distXZ  = length(worldPos.xz);
             float tY = (worldY - uMinY) / (uMaxY - uMinY);
-
-            // Verde só onde está ALTO e PERTO do centro
             float heightFactor = smoothstep(uStemThreshold, 1.0, tY);
             float radiusFactor = 1.0 - smoothstep(0.0, uStemRadius, distXZ);
-
             vIsStem = heightFactor * radiusFactor;
             `
           )
 
-          // Fragment: mistura cor do caule conforme máscara
           shader.fragmentShader = `
             uniform vec3  uColorStem;
             varying float vIsStem;
@@ -144,7 +144,7 @@ export default function AnimatedScene() {
         mat.needsUpdate = true
       })
 
-      // ── 4. Ajusta câmera ───────────────────────────────────────────────────
+      // ── 4. Ajusta câmera ──────────────────────────────────────────────────
       camera.position.set(0, 0, maxDim * 1.5)
       controls.target.set(0, 0, 0)
       camera.near = maxDim * 0.01
@@ -152,31 +152,55 @@ export default function AnimatedScene() {
       camera.updateProjectionMatrix()
       controls.update()
 
-      // ── 5. Animações GSAP ──────────────────────────────────────────────────
+      // ── 5. Animações GSAP ─────────────────────────────────────────────────
+      gsap.registerPlugin(ScrollTrigger)
+
       model.position.y = -maxDim * 2
-      gsap.to(model.position, { y: 0, duration: 1.2, ease: 'bounce.out' })
-      gsap.to(model.rotation, { y: Math.PI * 2, duration: 6, ease: 'none', repeat: -1 })
+      const entrada = gsap.to(model.position, {
+        y: 0,
+        duration: 1.2,
+        ease: 'bounce.out',
+      })
+
+      gsap.to(model.rotation, {
+        y: Math.PI * 2,
+        duration: 6,
+        ease: 'none',
+        repeat: -1,
+      })
+
+      entrada.then(() => {
+        ScrollTrigger.refresh()
+
+        gsap.to(model.position, {
+          y: -maxDim * 0.1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: mountRef.current.parentElement,
+            start: 'top top',
+            end: '+=100%',
+            scrub: 1,
+          },
+        })
+      })
+
+      // ── 6. Loop de animação — dentro do loader ────────────────────────────
+      const animate = () => {
+        animIdRef.current = requestAnimationFrame(animate)
+        controls.update()
+
+        shaderRefs.forEach((shader) => {
+          shader.uniforms.uMaxY.value = maxY + model.position.y
+          shader.uniforms.uMinY.value = minY + model.position.y
+        })
+
+        renderer.render(scene, camera)
+      }
+      animate()
     })
 
-    let animId
-    const animate = () => {
-      animId = requestAnimationFrame(animate)
-      controls.update()
-      renderer.render(scene, camera)
-    }
-    animate()
-
-    const handleResize = () => {
-      const w = mountRef.current.clientWidth
-      const h = mountRef.current.clientHeight
-      camera.aspect = w / h
-      camera.updateProjectionMatrix()
-      renderer.setSize(w, h)
-    }
-    window.addEventListener('resize', handleResize)
-
     return () => {
-      cancelAnimationFrame(animId)
+      cancelAnimationFrame(animIdRef.current)
       window.removeEventListener('resize', handleResize)
       renderer.dispose()
       mountRef.current?.removeChild(renderer.domElement)
@@ -186,7 +210,16 @@ export default function AnimatedScene() {
   return (
     <div
       ref={mountRef}
-      style={{ width: '50vw', height: '100vh', marginTop: '15rem', cursor: 'pointer' }}
+      style={{
+        width: '100vw',
+        height: '100vh',
+        position: 'fixed',
+        top: 100,
+        left: 0,
+        zIndex: 200,
+        background: 'transparent',
+        pointerEvents: 'auto',
+      }}
     />
   )
 }

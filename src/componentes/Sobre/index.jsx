@@ -1,20 +1,22 @@
 import { useEffect, useRef } from 'react'
-import styled, { createGlobalStyle } from 'styled-components'
+import styled from 'styled-components'
 
-// fontes globais
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400&display=swap');
+const Section = styled.section`
+  position: relative;
+  width: 100%;
+  height: 100vh;        // ← preenche o div pai de 100vh
+  background: #fdf8f2;
+  z-index: 100;
 `
 
 const Wrapper = styled.div`
-  position: relative;
-  height: 100%;
-  pointer-events: none;  // ← transparente
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 25vh 5vw;
-  z-index: 999;
+  padding: 0 5vw;
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -26,26 +28,26 @@ const Wrapper = styled.div`
 `
 
 const Left = styled.div`
-  pointer-events: auto;  // ← adicione isso
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-width: 240px;
+  max-width: 260px;
 `
 
 const Eyebrow = styled.span`
-  pointer-events: auto;  // ← adicione isso
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #8a6a3a;
 `
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: clamp(2.7rem, 8vw, 5rem);
-  line-height: 1.0;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 1.05;
   color: #1a1008;
 
   em {
@@ -61,7 +63,7 @@ const Sub = styled.p`
   line-height: 1.6;
   color: #6b5535;
   margin-top: 8px;
-  max-width: 200px;
+  max-width: 220px;
 `
 
 const Right = styled.div`
@@ -78,16 +80,14 @@ const Right = styled.div`
 const Badge = styled.span`
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: clamp(3rem, 5vw, 5rem);
+  font-size: clamp(2.5rem, 5vw, 4rem);
   color: transparent;
   -webkit-text-stroke: 1.5px #c45c00;
-  line-height: 1;
-  opacity: 0.35;
+  opacity: 0.3;
 `
 
 const Tag = styled.span`
   font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -102,14 +102,14 @@ const Divider = styled.div`
   top: 12%;
   height: 76%;
   width: 1px;
-  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #c45c0030, transparent);
 
   @media (max-width: 600px) {
     display: none;
   }
 `
 
-export default function OrangeText() {
+export default function SectionSobre() {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -117,8 +117,8 @@ export default function OrangeText() {
     els?.forEach((el, i) => {
       el.style.opacity = '0'
       el.style.transform = 'translateY(18px)'
-      el.style.transition = `opacity 0.7s ease ${i * 0.15 + 0.4}s, transform 0.7s ease ${i * 0.15 + 0.4}s`
-      
+      el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`
+
       requestAnimationFrame(() => {
         el.style.opacity = '1'
         el.style.transform = 'translateY(0)'
@@ -127,30 +127,28 @@ export default function OrangeText() {
   }, [])
 
   return (
-    <>
-      <GlobalStyle />
-
-      <Wrapper id='home' ref={ref}>
+    <Section id="sobre">
+      <Wrapper ref={ref}>
         <Divider />
 
         <Left>
-          <Eyebrow data-reveal>Citrus sinensis</Eyebrow>
+          <Eyebrow data-reveal>Origem & Essência</Eyebrow>
 
           <Title data-reveal>
-            A<br /><em>laranja</em><br />perfeita
+            Mais do que<br /><em>fruta</em>,<br />experiência
           </Title>
 
           <Sub data-reveal>
-            Colhida no ponto certo.<br />
-            Cada detalhe, uma obra da natureza.
+            Cultivada com precisão e respeito à natureza,
+            cada laranja carrega sabor, textura e história.
           </Sub>
         </Left>
 
         <Right>
-          <Badge data-reveal>№ 01</Badge>
-          <Tag data-reveal>100% natural</Tag>
+          <Badge data-reveal>Desde 1998</Badge>
+          <Tag data-reveal>produção artesanal</Tag>
         </Right>
       </Wrapper>
-    </>
+    </Section>
   )
 }

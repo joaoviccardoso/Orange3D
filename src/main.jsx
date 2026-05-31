@@ -2,8 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client' 
 import App from './App' 
 import { createGlobalStyle } from 'styled-components'
+import Navbar from './componentes/Nav'
 
 const GlobalStyle = createGlobalStyle`
+  html{
+    scroll-behavior: smooth;
+  }
+
   body {
     margin: 0;
     background: #f0ede8;
@@ -13,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
 createRoot(document.getElementById('root')).render( 
     <StrictMode> 
         <GlobalStyle />
-        <App /> 
+        <Navbar/>
+        <App />
     </StrictMode> 
 )
