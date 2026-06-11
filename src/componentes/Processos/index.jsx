@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 const Section = styled.section`
   position: relative;
@@ -83,7 +85,7 @@ const Badge = styled.span`
   font-size: clamp(2.5rem, 5vw, 4rem);
   color: transparent;
   -webkit-text-stroke: 1.5px #c45c00;
-  opacity: 0.3;
+  opacity: 0.8;
 `
 const Tag = styled.span`
   font-family: 'DM Sans', sans-serif;
@@ -110,16 +112,10 @@ export default function SectionProcesso() {
   const ref = useRef(null)
 
   useEffect(() => {
-    const els = ref.current?.querySelectorAll('[data-reveal]')
-    els?.forEach((el, i) => {
-      el.style.opacity = '0'
-      el.style.transform = 'translateY(18px)'
-      el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`
-      requestAnimationFrame(() => {
-        el.style.opacity = '1'
-        el.style.transform = 'translateY(0)'
+      AOS.init({
+        duration: 800,
+        once: true
       })
-    })
   }, [])
 
   return (
@@ -128,21 +124,21 @@ export default function SectionProcesso() {
         <Divider />
 
         <Left>
-          <Eyebrow data-reveal>Do campo à mesa</Eyebrow>
+          <Eyebrow data-aos="fade-up-right"  data-aos-delay="100">Do campo à mesa</Eyebrow>
 
-          <Title data-reveal>
+          <Title data-aos="fade-up-right" data-aos-delay="200">
             Cada etapa,<br /><em>um cuidado</em>
           </Title>
 
-          <Sub data-reveal>
+          <Sub data-aos="fade-up-right" data-aos-delay="300">
             Da colheita à seleção, cada fruta passa por um processo
             cuidadoso que preserva frescor, sabor e qualidade.
           </Sub>
         </Left>
 
-        <Right>
-          <Badge data-reveal>Etapa 02</Badge>
-          <Tag data-reveal>colheita seletiva</Tag>
+        <Right data-aos="fade-up-left" data-aos-delay="300">
+          <Badge>Etapa 02</Badge>
+          <Tag>colheita seletiva</Tag>
         </Right>
       </Wrapper>
     </Section>

@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 const Section = styled.section`
   position: relative;
@@ -150,6 +152,13 @@ export default function SectionContato() {
   const [form, setForm] = useState({ nome: '', email: '', mensagem: '' })
   const [status, setStatus] = useState(null) // null | 'sending' | 'success' | 'error'
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true
+    })
+  }, [])
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -172,7 +181,7 @@ export default function SectionContato() {
 
   return (
     <Section id="contato">
-      <Wrapper>
+      <Wrapper data-aos="fade-up" data-aos-delay="200">
         <Eyebrow>Fale conosco</Eyebrow>
         <Title>
           Entre em<br /><em>contato</em>

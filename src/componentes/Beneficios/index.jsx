@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 const Section = styled.section`
   position: relative;
@@ -100,16 +102,10 @@ export default function SectionBeneficios() {
   const ref = useRef(null)
 
   useEffect(() => {
-    const els = ref.current?.querySelectorAll('[data-reveal]')
-    els?.forEach((el, i) => {
-      el.style.opacity = '0'
-      el.style.transform = 'translateY(18px)'
-      el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`
-      requestAnimationFrame(() => {
-        el.style.opacity = '1'
-        el.style.transform = 'translateY(0)'
+      AOS.init({
+        duration: 800,
+        once: true
       })
-    })
   }, [])
 
   return (
@@ -118,21 +114,21 @@ export default function SectionBeneficios() {
         <Divider />
 
         <Left>
-          <Eyebrow data-reveal>Saúde & Sabor</Eyebrow>
+          <Eyebrow data-aos="fade-up-right"  data-aos-delay="100">Saúde & Sabor</Eyebrow>
 
-          <Title data-reveal>
+          <Title data-aos="fade-up-right" data-aos-delay="200">
             Benefícios em<br />cada <em>gomo</em>
           </Title>
 
-          <Sub data-reveal>
+          <Sub data-aos="fade-up-right" data-aos-delay="300">
             Rica em vitamina C, fibras e antioxidantes naturais,
             a laranja é aliada do bem-estar no dia a dia.
           </Sub>
         </Left>
 
-        <Right>
-          <Badge data-reveal>100%</Badge>
-          <Tag data-reveal>vitamina C</Tag>
+        <Right data-aos="fade-up-left" data-aos-delay="300">
+          <Badge >100%</Badge>
+          <Tag >vitamina C</Tag>
         </Right>
       </Wrapper>
     </Section>

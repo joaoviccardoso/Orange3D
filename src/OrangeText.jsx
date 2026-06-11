@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-
+import AOS from "aos"
+import "aos/dist/aos.css"
 // fontes globais
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400&display=swap');
@@ -111,18 +112,11 @@ const Divider = styled.div`
 
 export default function OrangeText() {
   const ref = useRef(null)
-
+  
   useEffect(() => {
-    const els = ref.current?.querySelectorAll('[data-reveal]')
-    els?.forEach((el, i) => {
-      el.style.opacity = '0'
-      el.style.transform = 'translateY(18px)'
-      el.style.transition = `opacity 0.7s ease ${i * 0.15 + 0.4}s, transform 0.7s ease ${i * 0.15 + 0.4}s`
-      
-      requestAnimationFrame(() => {
-        el.style.opacity = '1'
-        el.style.transform = 'translateY(0)'
-      })
+    AOS.init({
+      duration: 800,
+      once: true
     })
   }, [])
 
@@ -134,21 +128,28 @@ export default function OrangeText() {
         <Divider />
 
         <Left>
-          <Eyebrow data-reveal>Citrus sinensis</Eyebrow>
+          <Eyebrow data-aos="fade-up-right" data-aos-delay="100">
+            Citrus sinensis
+          </Eyebrow>
 
-          <Title data-reveal>
+          <Title data-aos="fade-up-right" data-aos-delay="200">
             A<br /><em>laranja</em><br />perfeita
           </Title>
 
-          <Sub data-reveal>
+          <Sub data-aos="fade-up-right" data-aos-delay="300">
             Colhida no ponto certo.<br />
             Cada detalhe, uma obra da natureza.
           </Sub>
         </Left>
 
         <Right>
-          <Badge data-reveal>№ 01</Badge>
-          <Tag data-reveal>100% natural</Tag>
+          <Badge data-aos="fade-up-left" data-aos-delay="400">
+            № 01
+          </Badge>
+
+          <Tag data-aos="fade-up-left" data-aos-delay="500">
+            100% natural
+          </Tag>
         </Right>
       </Wrapper>
     </>

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 const Section = styled.section`
   position: relative;
@@ -121,40 +123,33 @@ export default function SectionSobre() {
   const ref = useRef(null)
 
   useEffect(() => {
-    const els = ref.current?.querySelectorAll('[data-reveal]')
-    els?.forEach((el, i) => {
-      el.style.opacity = '0'
-      el.style.transform = 'translateY(18px)'
-      el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`
-
-      requestAnimationFrame(() => {
-        el.style.opacity = '1'
-        el.style.transform = 'translateY(0)'
+      AOS.init({
+        duration: 800,
+        once: true
       })
-    })
-  }, [])
+    }, [])
 
   return (
     <Section id="sobre">
       <Wrapper ref={ref}>
         <Divider />
 
-        <Left>
-          <Eyebrow data-reveal>Origem & Essência</Eyebrow>
+        <Left >
+          <Eyebrow data-aos="fade-up-right"  data-aos-delay="100">Origem & Essência</Eyebrow>
 
-          <Title data-reveal>
+          <Title data-aos="fade-up-right" data-aos-delay="200">
             Mais do que<br /><em>fruta</em>,<br />experiência
           </Title>
 
-          <Sub data-reveal>
+          <Sub data-aos="fade-up-right" data-aos-delay="300">
             Cultivada com precisão e respeito à natureza,
             cada laranja carrega sabor, textura e história.
           </Sub>
         </Left>
 
-        <Right>
-          <Badge data-reveal>Desde 1998</Badge>
-          <Tag data-reveal>produção artesanal</Tag>
+        <Right data-aos="fade-up-left" data-aos-delay="300">
+          <Badge >Desde 1998</Badge>
+          <Tag>produção artesanal</Tag>
         </Right>
       </Wrapper>
     </Section>
