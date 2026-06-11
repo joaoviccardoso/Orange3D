@@ -17,6 +17,7 @@ const Div = styled.div`
 export default function App() {
   return (
     <section style={{
+      overflow: 'hidden'
     }}>
       {/* Three.js ocupa o fundo inteiro */}
       <Div>

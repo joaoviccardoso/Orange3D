@@ -15,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: sans-serif;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
 
     background-image: repeating-linear-gradient(
       to right,
