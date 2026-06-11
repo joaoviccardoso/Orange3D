@@ -20,7 +20,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     padding: 0rem;
-    gap: 36px;
+    
     z-index: 999;
   }
 `
