@@ -32,6 +32,7 @@ export default function AnimatedScene() {
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableZoom = false
     controls.enableDamping = true
+    controls.enabled = window.innerWidth > 600
 
     scene.add(new THREE.AmbientLight(0xffffff, 1))
     const dirLight = new THREE.DirectionalLight(0xffffff, 1)
@@ -218,7 +219,7 @@ export default function AnimatedScene() {
         left: 0,
         zIndex: 200,
         background: 'transparent',
-        pointerEvents: 'auto',
+        pointerEvents: window.innerWidth <= 600 ? 'none' : 'auto',
       }}
     />
   )

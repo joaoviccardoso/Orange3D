@@ -6,7 +6,6 @@ const Section = styled.section`
   width: 100%;
   height: 100vh;        // ← preenche o div pai de 100vh
   background: #fdf8f2;
-  z-index: 100;
 `
 
 const Wrapper = styled.div`
@@ -19,11 +18,11 @@ const Wrapper = styled.div`
   padding: 0 5vw;
 
   @media (max-width: 600px) {
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 0 6vw 8vh;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
     gap: 16px;
+    z-index: 999;
   }
 `
 
@@ -32,6 +31,7 @@ const Left = styled.div`
   flex-direction: column;
   gap: 6px;
   max-width: 260px;
+  
 `
 
 const Eyebrow = styled.span`
@@ -54,6 +54,10 @@ const Title = styled.h2`
     font-style: italic;
     color: #c45c00;
   }
+
+  @media (max-width: 600px) {
+    font-size: clamp(2rem, 6vw, 4rem);
+  }
 `
 
 const Sub = styled.p`
@@ -64,6 +68,10 @@ const Sub = styled.p`
   color: #6b5535;
   margin-top: 8px;
   max-width: 220px;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+  }
 `
 
 const Right = styled.div`
@@ -73,7 +81,7 @@ const Right = styled.div`
   gap: 20px;
 
   @media (max-width: 600px) {
-    align-items: flex-start;
+    text-align: end;
   }
 `
 

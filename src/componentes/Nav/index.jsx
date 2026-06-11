@@ -19,6 +19,10 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 const Logo = styled.a`
@@ -28,6 +32,10 @@ const Logo = styled.a`
   color: #c45c00;
   text-decoration: none;
   letter-spacing: 0.05em;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const Links = styled.div`
@@ -68,6 +76,10 @@ const Link = styled.a`
 
   &:hover::after {
     width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 10px;
   }
 `
 

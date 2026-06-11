@@ -14,9 +14,6 @@ const Div = styled.div`
 export default function App() {
   return (
     <section style={{
-      position: 'relative',
-      height: '250vh',
-      width: '100vw',
     }}>
       {/* Three.js ocupa o fundo inteiro */}
       <AnimatedScene />

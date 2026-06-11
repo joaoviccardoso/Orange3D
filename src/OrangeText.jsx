@@ -8,20 +8,16 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   position: relative;
-  height: 100%;
+  height: 100vh;
   pointer-events: none;  // ← transparente
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 25vh 5vw;
+  padding: 0 6rem;
   z-index: 999;
 
   @media (max-width: 600px) {
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 0 6vw 8vh;
-    gap: 16px;
+    padding: 0 1rem;
   }
 `
 
