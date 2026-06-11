@@ -173,14 +173,32 @@ export default function AnimatedScene() {
       entrada.then(() => {
         ScrollTrigger.refresh()
 
+        // O elemento que engloba todas as seções "rolantes" (exceto Contato)
+        const scrollContainer = mountRef.current.parentElement
+
+        // A laranja desce/acompanha o scroll apenas até o fim desse container,
+        // ou seja, ela para de se mover assim que a seção Contato se aproxima.
         gsap.to(model.position, {
           y: -maxDim * 0.1,
           ease: 'none',
           scrollTrigger: {
-            trigger: mountRef.current.parentElement,
+            trigger: scrollContainer,
             start: 'top top',
-            end: '+=100%',
+            end: 'bottom bottom',
             scrub: 1,
+          },
+        })
+
+        // Faz a cena 3D desaparecer suavemente pouco antes do fim do container,
+        // garantindo que ela não fique sobreposta ao formulário de Contato.
+        gsap.to(mountRef.current, {
+          opacity: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: scrollContainer,
+            start: 'bottom bottom+=300',
+            end: 'bottom bottom',
+            scrub: true,
           },
         })
       })
